@@ -30,7 +30,6 @@
 
 <div class="navbar-custom d-flex justify-content-between align-items-center">
     <h3 class="m-0">Portal de Gestión | Control de Distintivos Turísticos</h3>
-    <!-- Botón para agregar nuevos registros -->
     <button class="btn btn-light text-dark fw-bold" onclick="abrirModalNuevo()">
         + Nuevo Distintivo
     </button>
@@ -64,7 +63,6 @@
     </div>
 </div>
 
-<!-- Modal Unificado (Sirve para Editar y Agregar) -->
 <div class="modal fade" id="distModal" tabindex="-1">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
@@ -81,8 +79,8 @@
             <div class="col-md-6"><label class="form-label">Establecimiento</label><input type="text" id="form-establecimiento" class="form-control"></div>
             <div class="col-md-6"><label class="form-label">Persona Suscrita</label><input type="text" id="form-persona" class="form-control"></div>
             <div class="col-md-4"><label class="form-label">Teléfono</label><input type="text" id="form-telefono" class="form-control"></div>
-            <div class="col-md-4"><label class="form-label">Emisión</label><input type="text" id="form-emision" class="form-control"></div>
-            <div class="col-md-4"><label class="form-label">Expiración</label><input type="text" id="form-expiracion" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Emisión</label><input type="text" id="form-emision" class="form-control" placeholder="DD/MM/AAAA"></div>
+            <div class="col-md-4"><label class="form-label">Expiración</label><input type="text" id="form-expiracion" class="form-control" placeholder="DD/MM/AAAA"></div>
             <div class="col-md-6"><label class="form-label">Convoca</label><input type="text" id="form-convoca" class="form-control"></div>
             <div class="col-md-6"><label class="form-label">Comentarios</label><input type="text" id="form-comentarios" class="form-control"></div>
         </div>
@@ -114,6 +112,25 @@
         });
     }
 
+    function formatearFecha(fechaStr) {
+        if (!fechaStr || fechaStr === "-" || String(fechaStr).trim() === "") return "-";
+        
+        if (String(fechaStr).includes("/")) return fechaStr;
+
+        try {
+            let fecha = new Date(fechaStr);
+            if (isNaN(fecha.getTime())) return fechaStr; 
+            
+            let dia = String(fecha.getUTCDate()).padStart(2, '0');
+            let mes = String(fecha.getUTCMonth() + 1).padStart(2, '0');
+            let anio = fecha.getUTCFullYear();
+            
+            return `${dia}/${mes}/${anio}`;
+        } catch (e) {
+            return fechaStr;
+        }
+    }
+
     function renderTable() {
         if (dataTable) {
             dataTable.destroy();
@@ -129,6 +146,9 @@
             if(tipo.includes('LIMPIO')) pl++;
             if(tipo.includes('ANFITRI')) ma++;
 
+            let emisionLimpia = formatearFecha(d['FECHA DE EMISION']);
+            let expiracionLimpia = formatearFecha(d['FECHA DE EXPIRACION']);
+
             tbody.append(`
                 <tr>
                     <td><strong>${d['FOLIO'] || '-'}</strong></td>
@@ -136,8 +156,8 @@
                     <td>${d['NOMBRE DEL ESTABLECIMIENTO'] || '-'}</td>
                     <td>${d['GIRO'] || '-'}</td>
                     <td>${d['MUNICIPIO'] || '-'}</td>
-                    <td>${d['FECHA DE EMISION'] || '-'}</td>
-                    <td>${d['FECHA DE EXPIRACION'] || '-'}</td>
+                    <td>${emisionLimpia}</td>
+                    <td>${expiracionLimpia}</td>
                     <td><button class="btn btn-sm btn-outline-secondary" onclick="abrirModalEdicion(${i})">Editar</button></td>
                 </tr>
             `);
@@ -152,7 +172,7 @@
         dataTable = $('#distTable').DataTable({ 
             responsive: true, 
             language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-MX.json" },
-            order: [[0, 'desc']] // Ordena para que los nuevos salgan primero
+            order: [[0, 'desc']] 
         });
     }
 
@@ -163,12 +183,10 @@
         }
     });
 
-    // FUNCIÓN PARA AGREGAR NUEVO
     function abrirModalNuevo() {
         $('#modalTitulo').text('Agregar Nuevo Registro');
-        // Limpiamos los campos
-        $('#form-folio').val('').prop('readonly', false); // Permite escribir un folio nuevo
-        $('#form-tipo').val('MÉXICO ANFITRIÓN'); // Lo ponemos por defecto, pero se puede cambiar
+        $('#form-folio').val('').prop('readonly', false); 
+        $('#form-tipo').val('MÉXICO ANFITRIÓN'); 
         $('#form-giro').val('');
         $('#form-municipio').val('');
         $('#form-establecimiento').val('');
@@ -178,24 +196,24 @@
         $('#form-expiracion').val('');
         $('#form-convoca').val('');
         $('#form-comentarios').val('');
-        
         modal.show();
     }
 
-    // FUNCIÓN PARA EDITAR EXISTENTE
     function abrirModalEdicion(index) {
         let d = distintivos[index];
         $('#modalTitulo').text('Editar Registro Existente');
         
-        $('#form-folio').val(d['FOLIO']).prop('readonly', true); // Bloquea el folio para no arruinar la base de datos
+        $('#form-folio').val(d['FOLIO']).prop('readonly', true); 
         $('#form-tipo').val(d['TIPO DE DOCUMENTO']);
         $('#form-giro').val(d['GIRO']);
         $('#form-municipio').val(d['MUNICIPIO']);
         $('#form-establecimiento').val(d['NOMBRE DEL ESTABLECIMIENTO']);
         $('#form-persona').val(d['NOMBRE DE LA PERSONA SUSCRITA EN EL DOCUMENTO']);
         $('#form-telefono').val(d['TELEFONO']);
-        $('#form-emision').val(d['FECHA DE EMISION']);
-        $('#form-expiracion').val(d['FECHA DE EXPIRACION']);
+        
+        $('#form-emision').val(formatearFecha(d['FECHA DE EMISION']));
+        $('#form-expiracion').val(formatearFecha(d['FECHA DE EXPIRACION']));
+        
         $('#form-convoca').val(d['CONVOCA']);
         $('#form-comentarios').val(d['COMENTARIOS']);
         
