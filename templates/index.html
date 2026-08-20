@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <style>
-        :root { --guinda: #691C32; --dorado: #BC955C; --gris: #98989A; --verde: #198754; --naranja: #fd7e14; }
+        :root { --guinda: #691C32; --dorado: #BC955C; --gris: #98989A; --verde: #198754; --naranja: #fd7e14; --azul: #0d6efd; }
         body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .navbar-custom { background-color: var(--guinda); color: white; padding: 15px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
@@ -40,6 +40,7 @@
         <div class="col"><div class="kpi-card filter-btn" data-filter=""><p>Total Registrados</p><h3 id="kpi-total">0</h3></div></div>
         <div class="col"><div class="kpi-card filter-btn" data-filter="DISTINTIVO H" style="border-left-color: var(--guinda);"><p>Distintivos H</p><h3 id="kpi-h">0</h3></div></div>
         <div class="col"><div class="kpi-card filter-btn" data-filter="RNT" style="border-left-color: #17a2b8;"><p>Reg. Nacional</p><h3 id="kpi-rnt">0</h3></div></div>
+        <div class="col"><div class="kpi-card filter-btn" data-filter="MODERNIZA" style="border-left-color: var(--azul);"><p>Moderniza</p><h3 id="kpi-mod">0</h3></div></div>
         <div class="col"><div class="kpi-card filter-btn" data-filter="PUNTO LIMPIO" style="border-left-color: var(--verde);"><p>Punto Limpio</p><h3 id="kpi-pl">0</h3></div></div>
         <div class="col"><div class="kpi-card filter-btn" data-filter="ANFITRIÓN" style="border-left-color: var(--naranja);"><p>México Anfitrión</p><h3 id="kpi-ma">0</h3></div></div>
     </div>
@@ -137,7 +138,7 @@
         }
         
         const tbody = $('#table-body').empty();
-        let distH = 0, rnt = 0, pl = 0, ma = 0;
+        let distH = 0, rnt = 0, pl = 0, ma = 0, mod = 0;
 
         distintivos.forEach((d, i) => {
             let tipo = String(d['TIPO DE DOCUMENTO'] || '').toUpperCase();
@@ -145,6 +146,7 @@
             if(tipo.includes('RNT')) rnt++;
             if(tipo.includes('LIMPIO')) pl++;
             if(tipo.includes('ANFITRI')) ma++;
+            if(tipo.includes('MODERNIZA')) mod++;
 
             let emisionLimpia = formatearFecha(d['FECHA DE EMISION']);
             let expiracionLimpia = formatearFecha(d['FECHA DE EXPIRACION']);
@@ -166,6 +168,7 @@
         $('#kpi-total').text(distintivos.length);
         $('#kpi-h').text(distH);
         $('#kpi-rnt').text(rnt);
+        $('#kpi-mod').text(mod);
         $('#kpi-pl').text(pl);
         $('#kpi-ma').text(ma);
 
