@@ -67,8 +67,6 @@
                     <th>Municipio</th>
                     <th>Emisión</th>
                     <th>Expiración</th>
-                    <!-- NUEVA COLUMNA -->
-                    <th>Entregado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -85,6 +83,7 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
+        <!-- Input oculto para guardar el ID secreto -->
         <input type="hidden" id="form-id">
         <div class="row g-3">
             <div class="col-md-3"><label class="form-label">Folio</label><input type="text" id="form-folio" class="form-control" placeholder="En blanco si no hay"></div>
@@ -111,22 +110,12 @@
             <div class="col-md-4"><label class="form-label">Teléfono</label><input type="text" id="form-telefono" class="form-control"></div>
             <div class="col-md-4"><label class="form-label">Emisión</label><input type="text" id="form-emision" class="form-control" placeholder="DD/MM/AAAA"></div>
             <div class="col-md-4"><label class="form-label">Expiración</label><input type="text" id="form-expiracion" class="form-control" placeholder="DD/MM/AAAA"></div>
-            
-            <!-- NUEVO CAMPO DE ENTREGADO -->
-            <div class="col-md-3">
-                <label class="form-label">¿Entregado?</label>
-                <select id="form-entregado" class="form-select">
-                    <option value="">Seleccione...</option>
-                    <option value="Sí">Sí, entregado</option>
-                    <option value="No">No entregado</option>
-                </select>
-            </div>
-            
-            <div class="col-md-4"><label class="form-label">Convoca</label><input type="text" id="form-convoca" class="form-control"></div>
-            <div class="col-md-5"><label class="form-label">Comentarios</label><input type="text" id="form-comentarios" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Convoca</label><input type="text" id="form-convoca" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Comentarios</label><input type="text" id="form-comentarios" class="form-control"></div>
         </div>
       </div>
       <div class="modal-footer d-flex justify-content-between">
+        <!-- Nuevo botón para eliminar -->
         <button class="btn btn-danger d-none" id="btn-eliminar" onclick="eliminarDistintivo()">Eliminar</button>
         <div>
             <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -195,11 +184,6 @@
 
             let emisionLimpia = formatearFecha(d['FECHA DE EMISION']);
             let expiracionLimpia = formatearFecha(d['FECHA DE EXPIRACION']);
-            
-            // Lógica visual para la etiqueta de Entregado
-            let entregado = d['ENTREGADO'] || 'No'; // Por defecto es No si está vacío
-            let badgeClass = entregado === 'Sí' ? 'bg-success' : 'bg-secondary';
-            let entregadoHtml = `<span class="badge ${badgeClass}">${entregado}</span>`;
 
             tbody.append(`
                 <tr>
@@ -210,7 +194,6 @@
                     <td>${d['MUNICIPIO'] || '-'}</td>
                     <td>${emisionLimpia}</td>
                     <td>${expiracionLimpia}</td>
-                    <td>${entregadoHtml}</td>
                     <td><button class="btn btn-sm btn-outline-secondary" onclick="abrirModalEdicion(${i})">Editar</button></td>
                 </tr>
             `);
@@ -244,8 +227,8 @@
 
     function abrirModalNuevo() {
         $('#modalTitulo').text('Agregar Nuevo Registro');
-        $('#form-id').val(''); 
-        $('#form-folio').val(''); 
+        $('#form-id').val(''); // Limpiamos el ID oculto
+        $('#form-folio').val(''); // Ahora siempre está libre
         $('#form-tipo').val(''); 
         $('#form-giro').val('');
         $('#form-municipio').val('');
@@ -254,11 +237,10 @@
         $('#form-telefono').val('');
         $('#form-emision').val('');
         $('#form-expiracion').val('');
-        $('#form-entregado').val('No'); // Por defecto al crear, no está entregado
         $('#form-convoca').val('');
         $('#form-comentarios').val('');
         
-        $('#btn-eliminar').addClass('d-none');
+        $('#btn-eliminar').addClass('d-none'); // Oculta el botón eliminar si es nuevo
         modal.show();
     }
 
@@ -266,8 +248,8 @@
         let d = distintivos[index];
         $('#modalTitulo').text('Editar Registro Existente');
         
-        $('#form-id').val(d['_id']); 
-        $('#form-folio').val(d['FOLIO']); 
+        $('#form-id').val(d['_id']); // Guardamos el ID secreto
+        $('#form-folio').val(d['FOLIO']); // Ahora siempre se puede editar el folio
         $('#form-tipo').val(d['TIPO DE DOCUMENTO']);
         $('#form-giro').val(d['GIRO']);
         $('#form-municipio').val(d['MUNICIPIO']);
@@ -278,19 +260,16 @@
         $('#form-emision').val(formatearFecha(d['FECHA DE EMISION']));
         $('#form-expiracion').val(formatearFecha(d['FECHA DE EXPIRACION']));
         
-        // Carga el estatus actual
-        $('#form-entregado').val(d['ENTREGADO'] || 'No');
-        
         $('#form-convoca').val(d['CONVOCA']);
         $('#form-comentarios').val(d['COMENTARIOS']);
         
-        $('#btn-eliminar').removeClass('d-none');
+        $('#btn-eliminar').removeClass('d-none'); // Muestra el botón eliminar
         modal.show();
     }
 
     function guardarDistintivo() {
         let data = {
-            "_id": $('#form-id').val(), 
+            "_id": $('#form-id').val(), // Enviamos el ID secreto para actualizar el correcto
             "FOLIO": $('#form-folio').val().trim(),
             "TIPO DE DOCUMENTO": $('#form-tipo').val().toUpperCase(),
             "GIRO": $('#form-giro').val(),
@@ -300,7 +279,6 @@
             "TELEFONO": $('#form-telefono').val(),
             "FECHA DE EMISION": $('#form-emision').val(),
             "FECHA DE EXPIRACION": $('#form-expiracion').val(),
-            "ENTREGADO": $('#form-entregado').val(), // Capturamos el nuevo campo
             "CONVOCA": $('#form-convoca').val(),
             "COMENTARIOS": $('#form-comentarios').val()
         };
@@ -317,6 +295,7 @@
         });
     }
 
+    // NUEVA FUNCIÓN PARA ELIMINAR
     function eliminarDistintivo() {
         if(confirm("¿Estás seguro de que deseas ELIMINAR este registro para siempre?")) {
             let data = { "_id": $('#form-id').val() };
