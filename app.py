@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 
@@ -14,17 +15,37 @@ def index():
 
 @app.route("/api/distintivos", methods=["GET"])
 def get_distintivos():
-    return jsonify(list(collection.find({}, {"_id": False})))
+    registros = []
+    for r in collection.find({}):
+        r["_id"] = str(r["_id"]) # Convertimos el ID secreto a texto para la web
+        registros.append(r)
+    return jsonify(registros)
 
 @app.route("/api/distintivos/actualizar", methods=["POST"])
 def actualizar_distintivo():
     req_data = request.json
-    collection.update_one(
-        {"FOLIO": req_data.get("FOLIO")},
-        {"$set": req_data},
-        upsert=True
-    )
-    return jsonify({"success": True, "message": "Actualizado"})
+    record_id = req_data.get("_id")
+    
+    # Quitamos el ID de los datos para no confundir a MongoDB
+    if "_id" in req_data:
+        del req_data["_id"]
+        
+    if record_id:
+        # Si ya existe, lo actualiza (¡Ahora puedes cambiar el folio libremente!)
+        collection.update_one({"_id": ObjectId(record_id)}, {"$set": req_data})
+    else:
+        # Si es totalmente nuevo, lo crea
+        collection.insert_one(req_data)
+        
+    return jsonify({"success": True})
+
+# ¡NUEVA RUTA PARA ELIMINAR!
+@app.route("/api/distintivos/eliminar", methods=["POST"])
+def eliminar_distintivo():
+    record_id = request.json.get("_id")
+    if record_id:
+        collection.delete_one({"_id": ObjectId(record_id)})
+    return jsonify({"success": True})
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
