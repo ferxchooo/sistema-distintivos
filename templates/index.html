@@ -10,7 +10,8 @@
         :root { 
             --guinda: #691C32; --dorado: #BC955C; --gris: #98989A; 
             --verde: #198754; --naranja: #fd7e14; --azul: #0d6efd; 
-            --turquesa: #20c997; 
+            --turquesa: #20c997; --morado: #6f42c1; --rojo: #dc3545;
+            --amarillo: #ffc107; --grisoscuro: #6c757d;
         }
         body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .navbar-custom { background-color: var(--guinda); color: white; padding: 15px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -22,7 +23,7 @@
         }
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
         .kpi-card h3 { margin: 0; font-size: 1.8rem; color: var(--guinda); font-weight: 700; }
-        .kpi-card p { margin: 0; color: var(--gris); font-size: 0.75rem; text-transform: uppercase; font-weight: 600; line-height: 1.2;}
+        .kpi-card p { margin: 0; color: var(--gris); font-size: 0.70rem; text-transform: uppercase; font-weight: 700; line-height: 1.2;}
         
         .table-container { background: white; border-radius: 8px; padding: 20px; margin-top: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         thead { background-color: var(--guinda) !important; color: white !important; }
@@ -40,15 +41,20 @@
 </div>
 
 <div class="container-fluid mt-4 px-4">
-    <!-- Ajusté los tamaños para que 7 tarjetas se vean bien -->
-    <div class="row g-2 mb-3 row-cols-2 row-cols-md-4 row-cols-lg-7">
+    <!-- Grid ajustado para 11 tarjetas: se acomodarán inteligentemente -->
+    <div class="row g-2 mb-3 row-cols-2 row-cols-md-4 row-cols-lg-6">
         <div class="col"><div class="kpi-card filter-btn" data-filter=""><p>Total</p><h3 id="kpi-total">0</h3></div></div>
-        <div class="col"><div class="kpi-card filter-btn" data-filter="DISTINTIVO H" style="border-left-color: var(--guinda);"><p>Distintivos H</p><h3 id="kpi-h">0</h3></div></div>
-        <div class="col"><div class="kpi-card filter-btn" data-filter="MODERNIZA" style="border-left-color: var(--azul);"><p>Moderniza</p><h3 id="kpi-mod">0</h3></div></div>
-        <div class="col"><div class="kpi-card filter-btn" data-filter="PUNTO LIMPIO" style="border-left-color: var(--verde);"><p>Punto Limpio</p><h3 id="kpi-pl">0</h3></div></div>
+        <div class="col"><div class="kpi-card filter-btn" data-filter="DISTINTIVO H" style="border-left-color: var(--guinda);"><p>Distintivo H</p><h3 id="kpi-h">0</h3></div></div>
+        <div class="col"><div class="kpi-card filter-btn" data-filter="RNT" style="border-left-color: #17a2b8;"><p>RNT</p><h3 id="kpi-rnt">0</h3></div></div>
+        <div class="col"><div class="kpi-card filter-btn" data-filter="PUNTO LIMPIO" style="border-left-color: var(--verde);"><p>Punto Limpio (PL)</p><h3 id="kpi-pl">0</h3></div></div>
+        <div class="col"><div class="kpi-card filter-btn" data-filter="MODERNIZA" style="border-left-color: var(--azul);"><p>Moderniza (M)</p><h3 id="kpi-mod">0</h3></div></div>
         <div class="col"><div class="kpi-card filter-btn" data-filter="ANFITRIÓN" style="border-left-color: var(--naranja);"><p>México Anfitrión</p><h3 id="kpi-ma">0</h3></div></div>
-        <div class="col"><div class="kpi-card filter-btn" data-filter="DISTINTIVO S" style="border-left-color: var(--turquesa);"><p>Distintivo S</p><h3 id="kpi-s">0</h3></div></div>
-        <div class="col"><div class="kpi-card filter-btn" data-filter="RNT" style="border-left-color: #17a2b8;"><p>Reg. Nacional</p><h3 id="kpi-rnt">0</h3></div></div>
+        
+        <div class="col"><div class="kpi-card filter-btn" data-filter="CCN" style="border-left-color: var(--grisoscuro);"><p>CCN</p><h3 id="kpi-ccn">0</h3></div></div>
+        <div class="col"><div class="kpi-card filter-btn" data-filter="CLASIFICACI" style="border-left-color: var(--amarillo);"><p>Clas. Hotelera</p><h3 id="kpi-clas">0</h3></div></div>
+        <div class="col"><div class="kpi-card filter-btn" data-filter="CHINA" style="border-left-color: var(--rojo);"><p>Cerca de China</p><h3 id="kpi-china">0</h3></div></div>
+        <div class="col"><div class="kpi-card filter-btn" data-filter="SALUD" style="border-left-color: var(--turquesa);"><p>Turismo Salud</p><h3 id="kpi-salud">0</h3></div></div>
+        <div class="col"><div class="kpi-card filter-btn" data-filter="COMUNITARIO" style="border-left-color: var(--morado);"><p>Tur. Comunitario</p><h3 id="kpi-comunitario">0</h3></div></div>
     </div>
 
     <div class="table-container">
@@ -79,17 +85,22 @@
       </div>
       <div class="modal-body">
         <div class="row g-3">
-            <div class="col-md-3"><label class="form-label">Folio</label><input type="text" id="form-folio" class="form-control" placeholder="Ej. MA-16"></div>
+            <div class="col-md-3"><label class="form-label">Folio</label><input type="text" id="form-folio" class="form-control"></div>
             <div class="col-md-3">
                 <label class="form-label">Documento</label>
-                <input type="text" id="form-tipo" class="form-control" list="tipo-opciones" placeholder="Ej. DISTINTIVO H">
+                <!-- Lista de opciones actualizada -->
+                <input type="text" id="form-tipo" class="form-control" list="tipo-opciones" placeholder="Seleccione uno...">
                 <datalist id="tipo-opciones">
                     <option value="DISTINTIVO H">
-                    <option value="MODERNIZA">
-                    <option value="PUNTO LIMPIO">
-                    <option value="MÉXICO ANFITRIÓN">
-                    <option value="DISTINTIVO S">
                     <option value="RNT">
+                    <option value="PUNTO LIMPIO">
+                    <option value="MODERNIZA">
+                    <option value="MÉXICO ANFITRIÓN">
+                    <option value="CCN">
+                    <option value="CLASIFICACIÓN HOTELERA">
+                    <option value="CERCA DE CHINA">
+                    <option value="TURISMO DE SALUD">
+                    <option value="TURISMO COMUNITARIO">
                 </datalist>
             </div>
             <div class="col-md-3"><label class="form-label">Giro</label><input type="text" id="form-giro" class="form-control"></div>
@@ -151,17 +162,22 @@
         }
         
         const tbody = $('#table-body').empty();
-        let distH = 0, rnt = 0, pl = 0, ma = 0, mod = 0, distS = 0;
+        let distH = 0, rnt = 0, pl = 0, mod = 0, ma = 0, ccn = 0, clas = 0, china = 0, salud = 0, comunitario = 0;
 
         distintivos.forEach((d, i) => {
             let tipo = String(d['TIPO DE DOCUMENTO'] || '').toUpperCase();
             
-            if(tipo.includes('DISTINTIVO H')) distH++;
-            if(tipo.includes('RNT')) rnt++;
-            if(tipo.includes('LIMPIO')) pl++;
+            // Lógica inteligente para sumar a las tarjetas correctas
+            if(tipo === 'H' || tipo.includes('DISTINTIVO H') || tipo === 'DISTINTIVO "H"') distH++;
+            if(tipo === 'RNT' || tipo.includes('REGISTRO NACIONAL')) rnt++;
+            if(tipo === 'PL' || tipo.includes('LIMPIO')) pl++;
+            if(tipo === 'M' || tipo.includes('MODERNIZA') || tipo.includes('DISTINTIVO M')) mod++;
             if(tipo.includes('ANFITRI')) ma++;
-            if(tipo.includes('MODERNIZA') || tipo.includes('DISTINTIVO M')) mod++;
-            if(tipo.includes('DISTINTIVO S')) distS++;
+            if(tipo === 'CCN' || tipo.includes('CONDUCTA NACIONAL')) ccn++;
+            if(tipo.includes('CLASIFICACI')) clas++;
+            if(tipo.includes('CHINA')) china++;
+            if(tipo.includes('SALUD')) salud++;
+            if(tipo.includes('COMUNITARIO')) comunitario++;
 
             let emisionLimpia = formatearFecha(d['FECHA DE EMISION']);
             let expiracionLimpia = formatearFecha(d['FECHA DE EXPIRACION']);
@@ -180,13 +196,18 @@
             `);
         });
 
+        // Actualizamos los números
         $('#kpi-total').text(distintivos.length);
         $('#kpi-h').text(distH);
         $('#kpi-rnt').text(rnt);
-        $('#kpi-mod').text(mod);
         $('#kpi-pl').text(pl);
+        $('#kpi-mod').text(mod);
         $('#kpi-ma').text(ma);
-        $('#kpi-s').text(distS);
+        $('#kpi-ccn').text(ccn);
+        $('#kpi-clas').text(clas);
+        $('#kpi-china').text(china);
+        $('#kpi-salud').text(salud);
+        $('#kpi-comunitario').text(comunitario);
 
         dataTable = $('#distTable').DataTable({ 
             responsive: true, 
